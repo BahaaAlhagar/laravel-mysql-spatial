@@ -76,11 +76,11 @@ class MultiPolygon extends GeometryCollection
         $polygons = [];
         $count = count($parts);
 
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             if ($i % 2 !== 0) {
                 list($end, $start) = explode(',', $parts[$i]);
                 $polygons[$i - 1] .= $end;
-                $polygons[++$i] = $start.$parts[$i];
+                $polygons[++$i] = $start . $parts[$i];
             } else {
                 $polygons[] = $parts[$i];
             }
@@ -89,7 +89,7 @@ class MultiPolygon extends GeometryCollection
         return $polygons;
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->validateItemType($value);
 
@@ -102,15 +102,18 @@ class MultiPolygon extends GeometryCollection
             $geoJson = GeoJson::jsonUnserialize(json_decode($geoJson));
         }
 
-        if (!is_a($geoJson, GeoJsonMultiPolygon::class)) {
-            throw new InvalidGeoJsonException('Expected '.GeoJsonMultiPolygon::class.', got '.get_class($geoJson));
+        if (! is_a($geoJson, GeoJsonMultiPolygon::class)) {
+            throw new InvalidGeoJsonException('Expected ' . GeoJsonMultiPolygon::class . ', got ' . get_class($geoJson));
         }
 
         $set = [];
+
         foreach ($geoJson->getCoordinates() as $polygonCoordinates) {
             $lineStrings = [];
+
             foreach ($polygonCoordinates as $lineStringCoordinates) {
                 $points = [];
+
                 foreach ($lineStringCoordinates as $lineStringCoordinate) {
                     $points[] = new Point($lineStringCoordinate[1], $lineStringCoordinate[0]);
                 }
@@ -127,9 +130,10 @@ class MultiPolygon extends GeometryCollection
      *
      * @return \GeoJson\Geometry\MultiPolygon
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $polygons = [];
+
         foreach ($this->items as $polygon) {
             $polygons[] = $polygon->jsonSerialize();
         }

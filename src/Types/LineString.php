@@ -48,11 +48,12 @@ class LineString extends PointCollection
             $geoJson = GeoJson::jsonUnserialize(json_decode($geoJson));
         }
 
-        if (!is_a($geoJson, GeoJsonLineString::class)) {
-            throw new InvalidGeoJsonException('Expected '.GeoJsonLineString::class.', got '.get_class($geoJson));
+        if (! is_a($geoJson, GeoJsonLineString::class)) {
+            throw new InvalidGeoJsonException('Expected ' . GeoJsonLineString::class . ', got ' . get_class($geoJson));
         }
 
         $set = [];
+
         foreach ($geoJson->getCoordinates() as $coordinate) {
             $set[] = new Point($coordinate[1], $coordinate[0]);
         }
@@ -65,9 +66,10 @@ class LineString extends PointCollection
      *
      * @return \GeoJson\Geometry\LineString
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $points = [];
+
         foreach ($this->items as $point) {
             $points[] = $point->jsonSerialize();
         }

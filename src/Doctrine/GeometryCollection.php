@@ -2,8 +2,8 @@
 
 namespace Grimzy\LaravelMysqlSpatial\Doctrine;
 
-use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class GeometryCollection extends Type
 {

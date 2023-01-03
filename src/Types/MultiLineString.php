@@ -49,7 +49,7 @@ class MultiLineString extends GeometryCollection
         }, $this->getLineStrings()));
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->validateItemType($value);
 
@@ -62,13 +62,15 @@ class MultiLineString extends GeometryCollection
             $geoJson = GeoJson::jsonUnserialize(json_decode($geoJson));
         }
 
-        if (!is_a($geoJson, GeoJsonMultiLineString::class)) {
-            throw new InvalidGeoJsonException('Expected '.GeoJsonMultiLineString::class.', got '.get_class($geoJson));
+        if (! is_a($geoJson, GeoJsonMultiLineString::class)) {
+            throw new InvalidGeoJsonException('Expected ' . GeoJsonMultiLineString::class . ', got ' . get_class($geoJson));
         }
 
         $set = [];
+
         foreach ($geoJson->getCoordinates() as $coordinates) {
             $points = [];
+
             foreach ($coordinates as $coordinate) {
                 $points[] = new Point($coordinate[1], $coordinate[0]);
             }
@@ -83,7 +85,7 @@ class MultiLineString extends GeometryCollection
      *
      * @return \GeoJson\Geometry\MultiLineString
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $lineStrings = [];
 

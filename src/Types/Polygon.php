@@ -19,13 +19,15 @@ class Polygon extends MultiLineString
             $geoJson = GeoJson::jsonUnserialize(json_decode($geoJson));
         }
 
-        if (!is_a($geoJson, GeoJsonPolygon::class)) {
-            throw new InvalidGeoJsonException('Expected '.GeoJsonPolygon::class.', got '.get_class($geoJson));
+        if (! is_a($geoJson, GeoJsonPolygon::class)) {
+            throw new InvalidGeoJsonException('Expected ' . GeoJsonPolygon::class . ', got ' . get_class($geoJson));
         }
 
         $set = [];
+
         foreach ($geoJson->getCoordinates() as $coordinates) {
             $points = [];
+
             foreach ($coordinates as $coordinate) {
                 $points[] = new Point($coordinate[1], $coordinate[0]);
             }
@@ -40,9 +42,10 @@ class Polygon extends MultiLineString
      *
      * @return \GeoJson\Geometry\Polygon
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $linearRings = [];
+
         foreach ($this->items as $lineString) {
             $linearRings[] = new \GeoJson\Geometry\LinearRing($lineString->jsonSerialize()->getCoordinates());
         }
